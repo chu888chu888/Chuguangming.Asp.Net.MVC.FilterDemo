@@ -1,0 +1,88 @@
+﻿@model CnBlogsCsdnArticles.Models.BlogModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    #Search, #Content
+    {
+        margin-left: 10px;
+    }
+
+    .emphasize
+    {
+        color: red;
+    }
+
+   
+</style>
+<h2>
+    博客过滤器</h2>
+@using (Html.BeginForm())
+{
+   
+    @Html.ValidationSummary(false)
+    <div id="Search">
+        @Html.LabelFor(p => p.Search.IsCnBlogsSelect)
+        @Html.CheckBoxFor(p => p.Search.IsCnBlogsSelect, new { @checked = "checked" })
+
+        @Html.LabelFor(p => p.Search.IsCsdnSelect)
+        @Html.CheckBoxFor(p => p.Search.IsCsdnSelect, new { @checked = "checked" })
+
+        @Html.LabelFor(p => p.Search.Title)
+        @Html.TextBoxFor(p => p.Search.Title)
+
+        @Html.LabelFor(p => p.Search.Content)
+        @Html.TextBoxFor(p => p.Search.Content)
+
+        @Html.LabelFor(p => p.Search.RecommendGreaterThan)
+        @Html.TextBoxFor(p => p.Search.RecommendGreaterThan)
+
+        @Html.LabelFor(p => p.Search.CommentsGreaterThan)
+        @Html.TextBoxFor(p => p.Search.CommentsGreaterThan)
+
+        @Html.LabelFor(p => p.Search.ReadsGreaterThan)
+        @Html.TextBoxFor(p => p.Search.ReadsGreaterThan)
+        <br />
+        源博客查询页数：
+        @Html.DropDownList("PageIndex", String.Empty)&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        共查询到<span class="emphasize">@ViewBag.TotalCount</span>条
+        <br />
+        <input type="submit" value="搜索" />
+    </div>
+}
+<hr />
+<div id="Content">
+    @if (Model != null && @Model.Items != null)
+    {
+        foreach (var item in @Model.Items)
+        {
+        @:网站来源:
+        if (@item.WebSiteSource == "博客园")
+        {
+        <span style="color: red">@item.WebSiteSource</span>
+        }
+        else
+        {
+        <span style="color: blue">@item.WebSiteSource</span>
+        }
+        <br />
+
+        if (@item.Avatar != null)
+        {
+        <img alt="" src="@item.Avatar" />
+        }
+        if (@item.WebSiteSource == "博客园")
+        {
+        @:推荐：<span class="emphasize">(@item.RecommendedCounts)</span>
+        }
+        <br />
+
+        @:标题: <a href="@item.TitleUrl" target="_blank" style="color:#2F649A">@item.Title</a><br/>
+        @:内容：@item.Content<br /><br />
+        <text> 评论数:<span class="emphasize">(@item.Comments)</span> 阅读数:<span class="emphasize">(@item.Reads)</span>
+        </text>
+        <hr />
+        }
+    }
+</div>
